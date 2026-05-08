@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0" />
+<meta name="theme-color" content="#0F1419" media="(prefers-color-scheme: dark)" />
+<meta name="theme-color" content="#F7F4EE" media="(prefers-color-scheme: light)" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<title>NYC Trip · Aug 7-15, 2026</title>
+<style>
+  /* ============ THEME ============ */
+  :root {
+    --bg: #F7F4EE;
+    --bg-2: #EFE8DA;
+    --surface: #FFFFFF;
+    --surface-2: #FBF8F2;
+    --ink: #1A1F2E;
+    --ink-soft: #5C6378;
+    --ink-muted: #8A92A6;
+    --line: #E5DECF;
+    --accent: #E07856;
+    --accent-strong: #C45A38;
+    --gold: #C9A961;
+    --teal: #2C7A7B;
+    --navy: #1E3A5F;
+    --shadow: 0 1px 3px rgba(26,31,46,0.06), 0 4px 16px rgba(26,31,46,0.04);
+    --shadow-strong: 0 4px 12px rgba(26,31,46,0.08), 0 12px 32px rgba(26,31,46,0.06);
+    --radius: 14px;
+    --radius-sm: 10px;
+    --radius-lg: 20px;
+    --nav-h: 72px;
+  }
+  [data-theme="dark"] {
+    --bg: #0F1419;
+    --bg-2: #161B22;
+    --surface: #1A2028;
+    --surface-2: #232A35;
+    --ink: #F5F1E8;
+    --ink-soft: #B7BCC9;
+    --ink-muted: #7C8390;
+    --line: #2C333E;
+    --accent: #F08D6E;
+    --accent-strong: #D85F3F;
+    --gold: #D4B873;
+    --teal: #4DA8A9;
+    --navy: #4A7BAF;
+    --shadow: 0 1px 3px rgba(0,0,0,0.4), 0 4px 16px rgba(0,0,0,0.3);
+    --shadow-strong: 0 4px 12px rgba(0,0,0,0.5), 0 12px 32px rgba(0,0,0,0.35);
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; height: 100%; background: var(--bg); }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: var(--ink);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    overscroll-behavior-y: none;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+
+  /* ============ APP SHELL ============ */
+  #app {
+    max-width: 720px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background: var(--bg);
+    position: relative;
+    padding-bottom: calc(var(--nav-h) + env(safe-area-inset-bottom, 0px) + 16px);
+  }
+
+  /* ============ TOP BAR ============ */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: max(env(safe-area-inset-top, 0px), 12px) 18px 12px;
+    background: var(--bg);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s, background 0.3s;
+  }
+  .topbar.scrolled { border-color: var(--line); background: rgba(247,244,238,0.92); backdrop-filter: blur(12px); }
+  [data-theme="dark"] .topbar.scrolled { background: rgba(15,20,25,0.92); }
+  .topbar h1 {
+    font-size: 17px;
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: -0.2px;
+  }
+  .topbar .pageLabel { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 2px; }
+  .icon-btn {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    color: var(--ink);
+    transition: transform 0.15s, background 0.15s;
+  }
+  .icon-btn:active { transform: scale(0.92); }
+  .icon-btn svg { width: 18px; height: 18px; }
+
+  /* ============ PAGES ============ */
+  .page {
+    display: none;
+    padding: 8px 18px 24px;
+    animation: fade 0.32s ease;
+  }
+  .page.active { display: block; }
+  @keyframes fade {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ============ HERO (HOME) ============ */
+  .hero {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 18px;
+    background: linear-gradient(160deg, #1E3A5F 0%, #2C5F7C 35%, #E07856 80%, #F4A261 100%);
+    color: #fff;
+    padding: 24px 22px 28px;
+    box-shadow: var(--shadow-strong);
+    min-height: 220px;
+  }
+  .hero::before {
+    content: "";
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 200' preserveAspectRatio='none'><path fill='rgba(15,20,25,0.45)' d='M0,140 L40,140 L40,100 L60,100 L60,120 L90,120 L90,80 L110,80 L110,65 L120,65 L120,40 L130,40 L130,65 L140,65 L140,115 L170,115 L170,90 L200,90 L200,140 L240,140 L240,70 L260,70 L260,50 L275,50 L275,70 L300,70 L300,140 L340,140 L340,105 L370,105 L370,140 L410,140 L410,85 L430,85 L430,140 L470,140 L470,115 L495,115 L495,75 L515,75 L515,140 L555,140 L555,95 L575,95 L575,60 L590,60 L590,40 L600,40 L600,60 L615,60 L615,95 L640,95 L640,140 L680,140 L680,110 L700,110 L700,80 L725,80 L725,140 L770,140 L770,95 L790,95 L790,125 L815,125 L815,70 L835,70 L835,140 L880,140 L880,90 L905,90 L905,140 L945,140 L945,115 L965,115 L965,75 L985,75 L985,140 L1020,140 L1020,95 L1045,95 L1045,70 L1065,70 L1065,140 L1100,140 L1100,80 L1125,80 L1125,120 L1160,120 L1160,95 L1200,95 L1200,200 L0,200 Z'/></svg>") bottom / cover no-repeat;
+    pointer-events: none;
+  }
+  .hero > * { position: relative; z-index: 1; }
+  .hero .city { font-size: 14px; letter-spacing: 4px; text-transform: uppercase; opacity: 0.85; font-weight: 500; }
+  .hero h2 { font-size: 38px; line-height: 1.05; font-weight: 800; margin: 4px 0 6px; letter-spacing: -1px; }
+  .hero .dates { font-size: 15px; opacity: 0.9; }
+
+  .countdown {
+    display: flex;
+    gap: 8px;
+    margin-top: 18px;
+    padding: 14px;
+    background: rgba(15,20,25,0.32);
+    backdrop-filter: blur(10px);
+    border-radius: var(--radius);
+    border: 1px solid rgba(255,255,255,0.12);
+  }
+  .countdown .cdn-item {
+    flex: 1;
+    text-align: center;
+  }
+  .countdown .num { font-size: 28px; font-weight: 700; line-height: 1; letter-spacing: -0.5px; }
+  .countdown .lbl { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.85; margin-top: 4px; }
+  .countdown .sep { color: rgba(255,255,255,0.3); font-size: 28px; line-height: 1; align-self: center; }
+
+  /* Trip facts pills */
+  .quick-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 14px 12px;
+    text-align: center;
+    box-shadow: var(--shadow);
+  }
+  .stat-card .num { font-size: 22px; font-weight: 700; color: var(--ink); letter-spacing: -0.3px; }
+  .stat-card .lbl { font-size: 10px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--ink-muted); margin-top: 3px; }
+
+  /* Section heading */
+  .section-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 24px 0 12px;
+    letter-spacing: -0.3px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+  .section-title small { font-size: 12px; color: var(--ink-muted); font-weight: 500; letter-spacing: 0.3px; }
+
+  /* Card */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 16px;
+    box-shadow: var(--shadow);
+    margin-bottom: 10px;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .card.tappable:active { transform: scale(0.985); box-shadow: var(--shadow-strong); }
+
+  /* Flight card */
+  .flight {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-bottom: 10px;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+  .flight::before {
+    content: "";
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: 4px;
+    background: var(--teal);
+    border-radius: 4px 0 0 4px;
+  }
+  .flight.depart::before { background: var(--accent); }
+
+  .flight-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 10px;
+  }
+  .flight-num {
+    background: var(--bg-2);
+    color: var(--ink);
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+  .flight-route {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 10px 0 6px;
+  }
+  .flight-route .city {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--ink);
+    flex: 1;
+  }
+  .flight-route .arrow {
+    color: var(--accent);
+    font-size: 18px;
+  }
+  .flight-route .city:last-child { text-align: right; }
+  .flight-note { font-size: 13px; color: var(--ink-soft); }
+
+  /* Hotel */
+  .hotel-card {
+    background: linear-gradient(135deg, var(--surface), var(--surface-2));
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 22px;
+    box-shadow: var(--shadow);
+    margin-bottom: 14px;
+  }
+  .hotel-card .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--gold);
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .hotel-card h3 { font-size: 22px; margin: 0 0 4px; letter-spacing: -0.4px; }
+  .hotel-card .addr { color: var(--ink-soft); font-size: 14px; margin-bottom: 14px; }
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  .info-grid .item {
+    background: var(--bg-2);
+    border-radius: var(--radius-sm);
+    padding: 12px;
+  }
+  .info-grid .item .lbl { font-size: 10px; color: var(--ink-muted); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 3px; }
+  .info-grid .item .val { font-size: 14px; font-weight: 600; }
+
+  /* Day card */
+  .day {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    margin-bottom: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .day-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .day-num {
+    background: var(--bg-2);
+    color: var(--ink);
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .day-num .big { font-size: 18px; line-height: 1; }
+  .day-num .small { font-size: 9px; letter-spacing: 1px; text-transform: uppercase; opacity: 0.7; margin-top: 2px; }
+  .day.event .day-num { background: var(--accent); color: #fff; }
+  .day.travel .day-num { background: var(--teal); color: #fff; }
+
+  .day-body-meta { flex: 1; min-width: 0; }
+  .day-body-meta .date { font-size: 11px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--ink-muted); }
+  .day-body-meta .title { font-size: 16px; font-weight: 600; margin-top: 2px; }
+  .day-tag {
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    background: var(--bg-2);
+    color: var(--ink-soft);
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-weight: 600;
+  }
+  .day.event .day-tag { background: var(--accent); color: #fff; }
+  .day.travel .day-tag { background: var(--teal); color: #fff; }
+
+  .day-detail {
+    padding: 0 16px 14px;
+    border-top: 1px solid var(--line);
+    margin-top: 0;
+    display: none;
+  }
+  .day.open .day-detail { display: block; }
+  .activity {
+    display: flex;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px dashed var(--line);
+  }
+  .activity:last-child { border: none; }
+  .activity .time {
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 13px;
+    min-width: 70px;
+  }
+  .activity .what b { display: block; font-size: 14px; }
+  .activity .what span { color: var(--ink-soft); font-size: 13px; }
+  .placeholder {
+    background: var(--bg-2);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    color: var(--ink-muted);
+    font-style: italic;
+    font-size: 13px;
+    margin: 8px 0;
+  }
+  .day-chevron {
+    color: var(--ink-muted);
+    transition: transform 0.2s;
+    flex-shrink: 0;
+  }
+  .day.open .day-chevron { transform: rotate(180deg); }
+
+  /* Budget */
+  .budget-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .budget-meta .stat-card .num.big { font-size: 26px; }
+  .progress-wrap {
+    background: var(--bg-2);
+    height: 8px;
+    border-radius: 999px;
+    overflow: hidden;
+    margin: 6px 0 8px;
+  }
+  .progress {
+    height: 100%;
+    background: linear-gradient(90deg, var(--teal), var(--gold));
+    border-radius: 999px;
+    transition: width 0.5s ease;
+  }
+  .progress.over { background: linear-gradient(90deg, var(--gold), var(--accent)); }
+  .progress-meta { display: flex; justify-content: space-between; font-size: 12px; color: var(--ink-muted); }
+
+  .budget-input {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 14px;
+    margin-bottom: 12px;
+    box-shadow: var(--shadow);
+  }
+  .budget-input label { font-size: 11px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--ink-muted); display: block; margin-bottom: 6px; }
+  .budget-input input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--line);
+    background: var(--bg-2);
+    color: var(--ink);
+    font-size: 16px;
+    font-family: inherit;
+    -webkit-appearance: none;
+  }
+  .budget-input input:focus { outline: none; border-color: var(--accent); }
+
+  .row-form { display: flex; gap: 8px; margin: 12px 0; }
+  .row-form input {
+    flex: 1; min-width: 0;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    border-radius: var(--radius-sm);
+    color: var(--ink);
+    font-family: inherit;
+    font-size: 15px;
+    -webkit-appearance: none;
+  }
+  .row-form input.amount { max-width: 110px; }
+  .row-form button { flex-shrink: 0; }
+  .row-form input:focus { outline: none; border-color: var(--accent); }
+
+  .btn {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 10px 18px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    min-height: 40px;
+    transition: transform 0.15s, background 0.15s;
+  }
+  .btn:active { transform: scale(0.96); }
+  .btn:hover { background: var(--accent-strong); }
+  .btn.ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+  .btn.ghost:hover { background: var(--bg-2); }
+  .btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+
+  .expense-list { background: transparent; }
+  .expense {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    margin-bottom: 8px;
+    box-shadow: var(--shadow);
+  }
+  .expense input { flex: 1; min-width: 0; border: none; background: transparent; padding: 4px; font-size: 14px; color: var(--ink); font-family: inherit; }
+  .expense input:focus { outline: none; background: var(--bg-2); border-radius: 6px; }
+  .expense input.amount { max-width: 100px; text-align: right; font-weight: 700; color: var(--accent); }
+  .expense .del {
+    background: transparent;
+    border: none;
+    color: var(--ink-muted);
+    font-size: 22px;
+    cursor: pointer;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+  }
+  .expense .del:hover { background: var(--bg-2); color: var(--accent); }
+
+  /* Map / Places */
+  .place {
+    display: flex;
+    gap: 14px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 14px;
+    margin-bottom: 10px;
+    box-shadow: var(--shadow);
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .place:active { transform: scale(0.985); }
+  .place .pin {
+    flex-shrink: 0;
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--accent);
+    color: #fff;
+  }
+  .place .pin.gold { background: var(--gold); }
+  .place .pin.teal { background: var(--teal); }
+  .place .pin.navy { background: var(--navy); }
+  .place .pin svg { width: 22px; height: 22px; }
+  .place .info { flex: 1; min-width: 0; }
+  .place .info h4 { margin: 0; font-size: 15px; font-weight: 600; }
+  .place .info p { margin: 2px 0 0; font-size: 12px; color: var(--ink-muted); }
+  .place .info .meta { font-size: 11px; color: var(--accent); margin-top: 4px; letter-spacing: 0.5px; text-transform: uppercase; font-weight: 600; }
+  .place .chev { color: var(--ink-muted); flex-shrink: 0; }
+
+  /* ============ BOTTOM NAV ============ */
+  .bottomnav {
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid var(--line);
+    padding: 8px 0 calc(env(safe-area-inset-bottom, 0px) + 8px);
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    transition: background 0.3s, border-color 0.3s;
+  }
+  [data-theme="dark"] .bottomnav { background: rgba(15,20,25,0.92); }
+  .bottomnav-inner {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    max-width: 720px;
+    width: 100%;
+    padding: 0 6px;
+  }
+  .nav-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    background: transparent;
+    border: none;
+    color: var(--ink-muted);
+    padding: 6px 4px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: color 0.2s;
+    min-height: 56px;
+  }
+  .nav-btn svg { width: 22px; height: 22px; }
+  .nav-btn span { font-size: 10px; letter-spacing: 0.3px; font-weight: 600; }
+  .nav-btn.active { color: var(--accent); }
+  .nav-btn:active { transform: scale(0.92); }
+
+  /* Tablet/desktop tweaks */
+  @media (min-width: 600px) {
+    .hero h2 { font-size: 48px; }
+    .countdown .num { font-size: 32px; }
+  }
+
+  @media (max-width: 380px) {
+    .nav-btn span { font-size: 9px; }
+    .hero h2 { font-size: 32px; }
+  }
+
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<div id="app">
+
+  <!-- TOP BAR -->
+  <header class="topbar" id="topbar">
+    <div>
+      <div class="pageLabel" id="pageLabel">HOME</div>
+      <h1 id="topbarTitle">New York Trip</h1>
+    </div>
+    <button class="icon-btn" id="themeToggle" aria-label="Toggle theme">
+      <svg id="iconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+      </svg>
+      <svg id="iconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    </button>
+  </header>
+
+  <!-- ============ HOME ============ -->
+  <section class="page active" data-page="home">
+    <div class="hero">
+      <div class="city">New York · United States</div>
+      <h2>NYC Adventure</h2>
+      <div class="dates">August 7 – 15, 2026</div>
+
+      <div class="countdown" id="countdown">
+        <div class="cdn-item"><div class="num" id="cdDays">--</div><div class="lbl">Days</div></div>
+        <div class="sep">:</div>
+        <div class="cdn-item"><div class="num" id="cdHours">--</div><div class="lbl">Hours</div></div>
+        <div class="sep">:</div>
+        <div class="cdn-item"><div class="num" id="cdMins">--</div><div class="lbl">Minutes</div></div>
+        <div class="sep">:</div>
+        <div class="cdn-item"><div class="num" id="cdSecs">--</div><div class="lbl">Seconds</div></div>
+      </div>
+    </div>
+
+    <div class="quick-stats">
+      <div class="stat-card"><div class="num">9</div><div class="lbl">Days</div></div>
+      <div class="stat-card"><div class="num">8</div><div class="lbl">Nights</div></div>
+      <div class="stat-card"><div class="num">2</div><div class="lbl">Events</div></div>
+    </div>
+
+    <h3 class="section-title">Trip Highlights <small>2 events</small></h3>
+    <div class="card tappable" onclick="navigate('itinerary')">
+      <div style="display:flex; gap:14px; align-items:center;">
+        <div style="width:42px; height:42px; border-radius:12px; background:var(--accent); color:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px; height:20px;"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+        </div>
+        <div style="flex:1; min-width:0;">
+          <div style="font-weight:600;">Yankees vs. Mariners</div>
+          <div style="font-size:12px; color:var(--ink-muted);">Tuesday · Aug 11 · Yankee Stadium</div>
+        </div>
+      </div>
+    </div>
+    <div class="card tappable" onclick="navigate('itinerary')">
+      <div style="display:flex; gap:14px; align-items:center;">
+        <div style="width:42px; height:42px; border-radius:12px; background:var(--gold); color:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px; height:20px;"><path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z"/></svg>
+        </div>
+        <div style="flex:1; min-width:0;">
+          <div style="font-weight:600;">Hamilton on Broadway</div>
+          <div style="font-size:12px; color:var(--ink-muted);">Thursday · Aug 13 · 7:00 PM</div>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="section-title">Quick Access</h3>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+      <div class="card tappable" onclick="navigate('flights')" style="text-align:center;">
+        <div style="width:36px; height:36px; margin:0 auto 6px; border-radius:50%; background:var(--bg-2); display:flex; align-items:center; justify-content:center; color:var(--accent);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px; height:18px;"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>
+        </div>
+        <div style="font-weight:600;">Flights</div>
+        <div style="font-size:11px; color:var(--ink-muted);">4 segments</div>
+      </div>
+      <div class="card tappable" onclick="navigate('hotel')" style="text-align:center;">
+        <div style="width:36px; height:36px; margin:0 auto 6px; border-radius:50%; background:var(--bg-2); display:flex; align-items:center; justify-content:center; color:var(--gold);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px; height:18px;"><path d="M2 22V8a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v14"/><path d="M6 22V14h12v8M9 10h.01M15 10h.01M9 14h.01M15 14h.01M9 18h.01M15 18h.01"/></svg>
+        </div>
+        <div style="font-weight:600;">Hotel</div>
+        <div style="font-size:11px; color:var(--ink-muted);">8 nights</div>
+      </div>
+      <div class="card tappable" onclick="navigate('budget')" style="text-align:center;">
+        <div style="width:36px; height:36px; margin:0 auto 6px; border-radius:50%; background:var(--bg-2); display:flex; align-items:center; justify-content:center; color:var(--teal);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px; height:18px;"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <div style="font-weight:600;">Budget</div>
+        <div style="font-size:11px; color:var(--ink-muted);">Track spending</div>
+      </div>
+      <div class="card tappable" onclick="navigate('places')" style="text-align:center;">
+        <div style="width:36px; height:36px; margin:0 auto 6px; border-radius:50%; background:var(--bg-2); display:flex; align-items:center; justify-content:center; color:var(--navy);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px; height:18px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <div style="font-weight:600;">Places</div>
+        <div style="font-size:11px; color:var(--ink-muted);">Map & venues</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FLIGHTS ============ -->
+  <section class="page" data-page="flights">
+    <div class="hero" style="min-height:140px; padding-bottom: 22px;">
+      <div class="city">All Flights</div>
+      <h2 style="font-size:30px;">Alaska Airlines</h2>
+      <div class="dates">2 outbound · 2 return</div>
+    </div>
+
+    <h3 class="section-title">Outbound · Aug 7</h3>
+    <div class="flight">
+      <div class="flight-header">
+        <span>Friday · Aug 7, 2026 · Leg 1</span>
+        <span class="flight-num">AS 710</span>
+      </div>
+      <div class="flight-route">
+        <div class="city">Origin</div>
+        <div class="arrow">→</div>
+        <div class="city">Connection</div>
+      </div>
+      <div class="flight-note">First leg of outbound journey · Confirm seats at check-in</div>
+    </div>
+    <div class="flight">
+      <div class="flight-header">
+        <span>Friday · Aug 7, 2026 · Leg 2</span>
+        <span class="flight-num">AS 294</span>
+      </div>
+      <div class="flight-route">
+        <div class="city">Connection</div>
+        <div class="arrow">→</div>
+        <div class="city">New York</div>
+      </div>
+      <div class="flight-note">Final leg · Arrives in NYC</div>
+    </div>
+
+    <h3 class="section-title">Return · Aug 15</h3>
+    <div class="flight depart">
+      <div class="flight-header">
+        <span>Saturday · Aug 15, 2026 · Leg 1</span>
+        <span class="flight-num">AS 290</span>
+      </div>
+      <div class="flight-route">
+        <div class="city">New York</div>
+        <div class="arrow">→</div>
+        <div class="city">Connection</div>
+      </div>
+      <div class="flight-note">Departing NYC</div>
+    </div>
+    <div class="flight depart">
+      <div class="flight-header">
+        <span>Saturday · Aug 15, 2026 · Leg 2</span>
+        <span class="flight-num">AS 1356</span>
+      </div>
+      <div class="flight-route">
+        <div class="city">Connection</div>
+        <div class="arrow">→</div>
+        <div class="city">Home</div>
+      </div>
+      <div class="flight-note">Final leg · Arrival home</div>
+    </div>
+  </section>
+
+  <!-- ============ HOTEL ============ -->
+  <section class="page" data-page="hotel">
+    <div class="hotel-card">
+      <span class="badge">★ Accommodations</span>
+      <h3>50 Sonesta Hotel New York</h3>
+      <p class="addr">New York, NY</p>
+
+      <div class="info-grid">
+        <div class="item">
+          <div class="lbl">Check-in</div>
+          <div class="val">Fri · Aug 7</div>
+        </div>
+        <div class="item">
+          <div class="lbl">Check-out</div>
+          <div class="val">Sat · Aug 15</div>
+        </div>
+        <div class="item">
+          <div class="lbl">Total Nights</div>
+          <div class="val">8 nights</div>
+        </div>
+        <div class="item">
+          <div class="lbl">Confirmation</div>
+          <div class="val">—</div>
+        </div>
+      </div>
+
+      <div class="btn-row" style="margin-top:16px;">
+        <a href="https://maps.google.com/?q=Sonesta+Hotel+New+York" target="_blank" rel="noopener" class="btn" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px; height:16px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Open in Maps
+        </a>
+        <button class="btn ghost" onclick="navigate('itinerary')">View Itinerary</button>
+      </div>
+    </div>
+
+    <h3 class="section-title">Stay Details</h3>
+    <div class="card">
+      <div style="font-size:13px; color:var(--ink-soft); line-height:1.7;">
+        <b>Hotel address & confirmation number to be added.</b><br/>
+        Tap "Open in Maps" above to view location.
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ITINERARY ============ -->
+  <section class="page" data-page="itinerary">
+    <div class="hero" style="min-height:140px; padding-bottom: 22px;">
+      <div class="city">Day-by-Day</div>
+      <h2 style="font-size:30px;">9-Day Schedule</h2>
+      <div class="dates">Tap any day to expand</div>
+    </div>
+
+    <div id="dayList"></div>
+  </section>
+
+  <!-- ============ BUDGET ============ -->
+  <section class="page" data-page="budget">
+    <div class="hero" style="min-height:140px; padding-bottom: 22px; background:linear-gradient(160deg, var(--navy), var(--teal));">
+      <div class="city">Trip Budget</div>
+      <h2 style="font-size:30px;" id="bHeroTotal">$0</h2>
+      <div class="dates" id="bHeroSub">Set a goal below</div>
+    </div>
+
+    <div class="budget-meta">
+      <div class="stat-card">
+        <div class="num big" id="bSpent">$0</div>
+        <div class="lbl">Spent</div>
+      </div>
+      <div class="stat-card">
+        <div class="num big" id="bRemaining">$0</div>
+        <div class="lbl">Remaining</div>
+      </div>
+    </div>
+
+    <div class="progress-wrap"><div class="progress" id="bProgress" style="width:0%"></div></div>
+    <div class="progress-meta"><span>0%</span><span id="bProgressMax">$0</span></div>
+
+    <div class="budget-input" style="margin-top:18px;">
+      <label>Trip Budget Goal</label>
+      <input type="number" id="bTotal" placeholder="$ Enter amount" inputmode="decimal" />
+    </div>
+
+    <h3 class="section-title">Expenses <small><span id="bCount">0</span> items</small></h3>
+    <div class="row-form">
+      <input type="text" id="newCat" placeholder="Category" />
+      <input type="number" id="newAmt" class="amount" placeholder="$" inputmode="decimal" />
+      <button class="btn" onclick="addExpense()">Add</button>
+    </div>
+
+    <div class="expense-list" id="expenseList"></div>
+
+    <div class="btn-row">
+      <button class="btn ghost" onclick="loadStarter()">Add Suggested Categories</button>
+      <button class="btn ghost" onclick="clearAll()">Clear All</button>
+    </div>
+  </section>
+
+  <!-- ============ PLACES ============ -->
+  <section class="page" data-page="places">
+    <div class="hero" style="min-height:140px; padding-bottom: 22px; background:linear-gradient(160deg, var(--gold), var(--accent));">
+      <div class="city">Places to Visit</div>
+      <h2 style="font-size:30px;">Saved Spots</h2>
+      <div class="dates">Tap to open in Maps</div>
+    </div>
+
+    <a class="place" href="https://maps.google.com/?q=Sonesta+Hotel+New+York" target="_blank" rel="noopener">
+      <div class="pin gold">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 22V8a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v14"/><path d="M6 22V14h12v8"/></svg>
+      </div>
+      <div class="info">
+        <h4>50 Sonesta Hotel New York</h4>
+        <p>Your home base · 8 nights</p>
+        <div class="meta">Hotel · Aug 7-15</div>
+      </div>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px; height:18px;"><path d="m9 18 6-6-6-6"/></svg>
+    </a>
+
+    <a class="place" href="https://maps.google.com/?q=Yankee+Stadium" target="_blank" rel="noopener">
+      <div class="pin">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 4 10 15 15 0 0 1-4 10 15 15 0 0 1-4-10 15 15 0 0 1 4-10z"/></svg>
+      </div>
+      <div class="info">
+        <h4>Yankee Stadium</h4>
+        <p>Bronx, NY · Yankees vs. Mariners</p>
+        <div class="meta">Event · Tue Aug 11</div>
+      </div>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px; height:18px;"><path d="m9 18 6-6-6-6"/></svg>
+    </a>
+
+    <a class="place" href="https://maps.google.com/?q=Richard+Rodgers+Theatre+New+York" target="_blank" rel="noopener">
+      <div class="pin teal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+      </div>
+      <div class="info">
+        <h4>Richard Rodgers Theatre</h4>
+        <p>226 W 46th St · Hamilton at 7 PM</p>
+        <div class="meta">Event · Thu Aug 13</div>
+      </div>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px; height:18px;"><path d="m9 18 6-6-6-6"/></svg>
+    </a>
+
+    <h3 class="section-title">Add More</h3>
+    <div class="card">
+      <div style="font-size:13px; color:var(--ink-soft); line-height:1.6;">
+        Suggestions to consider: Times Square, Central Park, Statue of Liberty, Empire State Building, Brooklyn Bridge, MoMA, 9/11 Memorial. Let me know what you'd like to add.
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottomnav">
+  <div class="bottomnav-inner">
+    <button class="nav-btn active" data-target="home" onclick="navigate('home')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
+      <span>Home</span>
+    </button>
+    <button class="nav-btn" data-target="flights" onclick="navigate('flights')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>
+      <span>Flights</span>
+    </button>
+    <button class="nav-btn" data-target="hotel" onclick="navigate('hotel')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 22V8a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v14"/><path d="M6 22V14h12v8"/></svg>
+      <span>Hotel</span>
+    </button>
+    <button class="nav-btn" data-target="itinerary" onclick="navigate('itinerary')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z"/></svg>
+      <span>Schedule</span>
+    </button>
+    <button class="nav-btn" data-target="budget" onclick="navigate('budget')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      <span>Budget</span>
+    </button>
+    <button class="nav-btn" data-target="places" onclick="navigate('places')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      <span>Places</span>
+    </button>
+  </div>
+</nav>
+
+<script>
+  // ============ NAV ============
+  const TITLES = {
+    home: { title: "New York Trip", label: "HOME" },
+    flights: { title: "Flights", label: "AIR TRAVEL" },
+    hotel: { title: "Accommodations", label: "WHERE YOU'LL STAY" },
+    itinerary: { title: "Itinerary", label: "DAY-BY-DAY" },
+    budget: { title: "Budget", label: "EXPENSES" },
+    places: { title: "Places", label: "MAP & VENUES" },
+  };
+
+  function navigate(target) {
+    document.querySelectorAll('.page').forEach(p => p.classList.toggle('active', p.dataset.page === target));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.target === target));
+    document.getElementById('topbarTitle').textContent = TITLES[target].title;
+    document.getElementById('pageLabel').textContent = TITLES[target].label;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ============ THEME ============
+  const themeBtn = document.getElementById('themeToggle');
+  const iconSun = document.getElementById('iconSun');
+  const iconMoon = document.getElementById('iconMoon');
+
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    iconSun.classList.toggle('hidden', theme === 'dark');
+    iconMoon.classList.toggle('hidden', theme !== 'dark');
+    try { localStorage.setItem('nyc-theme', theme); } catch(e) {}
+  }
+  let storedTheme = 'light';
+  try {
+    storedTheme = localStorage.getItem('nyc-theme') ||
+      (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  } catch(e) {}
+  applyTheme(storedTheme);
+  themeBtn.addEventListener('click', () => {
+    const cur = document.documentElement.getAttribute('data-theme') || 'light';
+    applyTheme(cur === 'dark' ? 'light' : 'dark');
+  });
+
+  // ============ TOPBAR SCROLL ============
+  const topbar = document.getElementById('topbar');
+  window.addEventListener('scroll', () => {
+    topbar.classList.toggle('scrolled', window.scrollY > 8);
+  }, { passive: true });
+
+  // ============ COUNTDOWN ============
+  const TRIP_DATE = new Date('2026-08-07T08:00:00');
+  function tickCountdown() {
+    const now = new Date();
+    let diff = Math.max(0, TRIP_DATE - now);
+    const days = Math.floor(diff / 86400000); diff %= 86400000;
+    const hours = Math.floor(diff / 3600000); diff %= 3600000;
+    const mins = Math.floor(diff / 60000); diff %= 60000;
+    const secs = Math.floor(diff / 1000);
+    document.getElementById('cdDays').textContent = String(days).padStart(2, '0');
+    document.getElementById('cdHours').textContent = String(hours).padStart(2, '0');
+    document.getElementById('cdMins').textContent = String(mins).padStart(2, '0');
+    document.getElementById('cdSecs').textContent = String(secs).padStart(2, '0');
+  }
+  tickCountdown();
+  setInterval(tickCountdown, 1000);
+
+  // ============ ITINERARY ============
+  const DAYS = [
+    { num: 1, day: "Friday", date: "August 7, 2026", title: "Arrival in New York", type: "travel", tag: "Travel",
+      activities: [
+        { time: "All Day", what: "Flights AS 710 → AS 294", detail: "Travel to New York City" },
+        { time: "PM", what: "Hotel Check-in", detail: "50 Sonesta Hotel New York" },
+      ]
+    },
+    { num: 2, day: "Saturday", date: "August 8, 2026", title: "Day 2 — TBD", type: "open", tag: "Open", activities: [] },
+    { num: 3, day: "Sunday", date: "August 9, 2026", title: "Day 3 — TBD", type: "open", tag: "Open", activities: [] },
+    { num: 4, day: "Monday", date: "August 10, 2026", title: "Day 4 — TBD", type: "open", tag: "Open", activities: [] },
+    { num: 5, day: "Tuesday", date: "August 11, 2026", title: "Yankees vs. Mariners", type: "event", tag: "Event",
+      activities: [
+        { time: "Game Day", what: "Yankees vs. Seattle Mariners", detail: "Yankee Stadium · Bronx, NY" },
+      ]
+    },
+    { num: 6, day: "Wednesday", date: "August 12, 2026", title: "Day 6 — TBD", type: "open", tag: "Open", activities: [] },
+    { num: 7, day: "Thursday", date: "August 13, 2026", title: "Hamilton on Broadway", type: "event", tag: "Event",
+      activities: [
+        { time: "7:00 PM", what: "Hamilton", detail: "Richard Rodgers Theatre · 226 W 46th St" },
+      ]
+    },
+    { num: 8, day: "Friday", date: "August 14, 2026", title: "Day 8 — TBD", type: "open", tag: "Open", activities: [] },
+    { num: 9, day: "Saturday", date: "August 15, 2026", title: "Departure", type: "travel", tag: "Travel",
+      activities: [
+        { time: "AM", what: "Hotel Check-out", detail: "50 Sonesta Hotel New York" },
+        { time: "All Day", what: "Flights AS 290 → AS 1356", detail: "Return travel home" },
+      ]
+    },
+  ];
+
+  function renderDays() {
+    const list = document.getElementById('dayList');
+    list.innerHTML = '';
+    DAYS.forEach((d, idx) => {
+      const dayEl = document.createElement('div');
+      dayEl.className = 'day ' + d.type + (idx === 0 ? ' open' : '');
+      const acts = d.activities.length ? d.activities.map(a => `
+        <div class="activity">
+          <div class="time">${a.time}</div>
+          <div class="what"><b>${a.what}</b><span>${a.detail || ''}</span></div>
+        </div>
+      `).join('') : '<div class="placeholder">Activities to be added later</div>';
+
+      dayEl.innerHTML = `
+        <div class="day-head" onclick="this.parentElement.classList.toggle('open')">
+          <div class="day-num"><span class="big">${d.num}</span><span class="small">${d.day.slice(0,3)}</span></div>
+          <div class="day-body-meta">
+            <div class="date">${d.date}</div>
+            <div class="title">${d.title}</div>
+          </div>
+          <span class="day-tag">${d.tag}</span>
+          <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px; height:18px;"><path d="m6 9 6 6 6-6"/></svg>
+        </div>
+        <div class="day-detail">${acts}</div>
+      `;
+      list.appendChild(dayEl);
+    });
+  }
+  renderDays();
+
+  // ============ BUDGET ============
+  let expenses = [];
+  let nextId = 1;
+
+  function addExpense() {
+    const name = document.getElementById('newCat').value.trim();
+    const amt = parseFloat(document.getElementById('newAmt').value) || 0;
+    if (!name) return;
+    expenses.push({ id: nextId++, name, amount: amt });
+    document.getElementById('newCat').value = '';
+    document.getElementById('newAmt').value = '';
+    renderBudget();
+  }
+
+  function deleteExpense(id) {
+    expenses = expenses.filter(e => e.id !== id);
+    renderBudget();
+  }
+
+  function updateExpense(id, field, val) {
+    const e = expenses.find(x => x.id === id);
+    if (!e) return;
+    if (field === 'amount') e.amount = parseFloat(val) || 0;
+    else e.name = val;
+    updateBudgetTotals();
+  }
+
+  function renderBudget() {
+    const list = document.getElementById('expenseList');
+    list.innerHTML = '';
+    expenses.forEach(e => {
+      const row = document.createElement('div');
+      row.className = 'expense';
+      row.innerHTML = `
+        <input type="text" value="${escapeAttr(e.name)}" oninput="updateExpense(${e.id}, 'name', this.value)" />
+        <input type="number" class="amount" value="${e.amount}" inputmode="decimal" oninput="updateExpense(${e.id}, 'amount', this.value)" />
+        <button class="del" aria-label="Delete" onclick="deleteExpense(${e.id})">×</button>
+      `;
+      list.appendChild(row);
+    });
+    updateBudgetTotals();
+  }
+
+  function updateBudgetTotals() {
+    const total = parseFloat(document.getElementById('bTotal').value) || 0;
+    const spent = expenses.reduce((s, e) => s + (e.amount || 0), 0);
+    const remaining = total - spent;
+    const pct = total > 0 ? Math.min(100, (spent / total) * 100) : 0;
+
+    document.getElementById('bSpent').textContent = fmt(spent);
+    document.getElementById('bRemaining').textContent = fmt(remaining);
+    document.getElementById('bHeroTotal').textContent = total > 0 ? fmt(total) : '$0';
+    document.getElementById('bHeroSub').textContent = total > 0
+      ? `${Math.round(pct)}% used · ${fmt(remaining)} remaining`
+      : 'Set a goal below';
+    document.getElementById('bProgressMax').textContent = fmt(total);
+    document.querySelector('.progress-meta span:first-child').textContent = (total > 0 ? Math.round(pct) : 0) + '%';
+    document.getElementById('bCount').textContent = expenses.length;
+
+    const bar = document.getElementById('bProgress');
+    bar.style.width = pct + '%';
+    bar.classList.toggle('over', total > 0 && spent > total);
+  }
+
+  document.getElementById('bTotal').addEventListener('input', updateBudgetTotals);
+
+  function loadStarter() {
+    const starters = [
+      'Flights (Alaska Airlines)', 'Hotel — Sonesta (8 nights)',
+      'Yankees Game Tickets', 'Hamilton Tickets',
+      'Food & Dining', 'Transit & Taxis',
+      'Activities & Attractions', 'Souvenirs & Misc',
+    ];
+    starters.forEach(s => expenses.push({ id: nextId++, name: s, amount: 0 }));
+    renderBudget();
+  }
+
+  function clearAll() {
+    if (confirm('Clear all expenses and budget?')) {
+      expenses = [];
+      document.getElementById('bTotal').value = '';
+      renderBudget();
+    }
+  }
+
+  function fmt(n) {
+    return '$' + (Number(n) || 0).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+  }
+  function escapeAttr(s) {
+    return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  }
+
+  renderBudget();
+
+  // Allow Enter to submit
+  document.getElementById('newAmt').addEventListener('keydown', e => { if (e.key === 'Enter') addExpense(); });
+  document.getElementById('newCat').addEventListener('keydown', e => { if (e.key === 'Enter') addExpense(); });
+</script>
+
+</body>
+</html>
